@@ -1,0 +1,25 @@
+#coin_list, #content, #exchange_list {
+    margin: 0 100px;
+}
+td img{
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+}
+.change {
+    color: green
+}
+.percent {
+    height: 20px;
+    width: 20px;
+    float: left;
+    background-color: #D16BAB;
+}
+.toTop {
+    width: 51px;
+    height: 66px;
+    position:fixed;
+    top:50%;
+    cursor:pointer;
+    background-image: url(../images/top.jpg)
+}
