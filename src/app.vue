@@ -7,7 +7,9 @@
                 <li><a href="/chart">图表</a></li>
             </ul>
         </div>
-        <router-view @getPercents="getPercents" :windowWidth="windowWidth"></router-view>
+        <transition mode="out-in" enter-active-class="rollIn" :duration="5000">
+            <router-view @getPercents="getPercents" :windowWidth="windowWidth" class="animated"></router-view>
+        </transition>
     </div>
 </template>
 
@@ -53,4 +55,11 @@
     .router-link-active{
         background: plum;
     }
+    /*.v-enter, v-leave-to{*/
+        /*transform: translateX(1000px)*/
+    /*}*/
+    /*.v-enter-active, v-leave-active{*/
+        /*transition: all 1s ease-in*/
+    /*}*/
+
 </style>

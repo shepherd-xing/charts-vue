@@ -23,3 +23,6 @@ td img{
     cursor:pointer;
     background-image: url(../images/top.jpg)
 }
+tbody tr {
+    transition: all 0.5s;
+}

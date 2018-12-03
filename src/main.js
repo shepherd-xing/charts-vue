@@ -9,6 +9,7 @@ import axios from 'axios'
 Vue.prototype.$axios = axios
 import Chart from 'chart.js'
 window.Promise = Promise
+import 'animate.css'
 
 const vm = new Vue({
     el: '#app',
