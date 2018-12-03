@@ -185,10 +185,11 @@
 
 <style scoped>
     #coin_info {
-        margin: 15px auto;
+        margin: 15px 30px;
+        padding-left: 0
     }
-    #trade_info {
-        margin: 0 20px;
+    .col-md-5 {
+        padding-left:0
     }
     td div {
         height: 20px;
@@ -199,7 +200,7 @@
         width: 50%;
     }
     tbody tr:hover {
-        transform: skew(-12deg) scale(1.04, 1.07)
+        transform: skew(-12deg) scale(1.03, 1.05)
     }
 
 </style>

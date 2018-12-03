@@ -6,44 +6,87 @@
     <META HTTP-EQUIV="pragma" CONTENT="no-cache">
     <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
     <META HTTP-EQUIV="expires" CONTENT="0">
-    <!--<link rel="shortcut icon" href="%% url_for('static', filename='images/favicon.ico') %%">-->
+    <link rel="shortcut icon" href="%% url_for('static', filename='images/favicon.ico') %%">
 </head>
 <body>
 <!-- TradingView Widget BEGIN -->
-<div class="tradingview-widget-container">
-    <div class="tradingview-widget-container__widget"></div>
-    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
-        {
-            "symbols": [
-            {
-                "title": "标普500",
-                "proName": "INDEX:SPX"
-            },
-            {
-                "description": "道琼斯指数",
-                "proName": "DJ:DJI"
-            },
-            {
-                "description": "黄金",
-                "proName": "OANDA:XAUUSD"
-            },
-            {
-                "description": "比特币",
-                "proName": "BITMEX:XBT"
-            },
-            {
-                "description": "以太币",
-                "proName": "COINBASE:ETHUSD"
-            },
-            {
-                "description": "瑞波币",
-                "proName": "BITSTAMP:XRPUSD"
-            }
-        ],
-            "locale": "zh_CN",
-            "linkPageTemplate": "https://cryptocurrencycharts.herokuapp.com/chart"
-        }
-    </script>
+<div id="tickBar">
+    <ul>
+        <li>
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
+                    {
+                        "symbols": [
+                        {
+                            "title": "标普500",
+                            "proName": "INDEX:SPX"
+                        },
+                        {
+                            "description": "道琼斯指数",
+                            "proName": "DJ:DJI"
+                        },
+                        {
+                            "description": "黄金",
+                            "proName": "OANDA:XAUUSD"
+                        },
+                        {
+                            "description": "比特币",
+                            "proName": "BITMEX:XBT"
+                        },
+                        {
+                            "description": "以太币",
+                            "proName": "COINBASE:ETHUSD"
+                        },
+                        {
+                            "description": "瑞波币",
+                            "proName": "BITSTAMP:XRPUSD"
+                        }
+                    ],
+                        "locale": "zh_CN",
+                        "linkPageTemplate": "https://cryptocurrencycharts.herokuapp.com/chart"
+                    }
+                </script>
+            </div>
+        </li>
+        <li>
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
+                    {
+                        "symbols": [
+                        {
+                            "title": "标普500",
+                            "proName": "INDEX:SPX"
+                        },
+                        {
+                            "description": "道琼斯指数",
+                            "proName": "DJ:DJI"
+                        },
+                        {
+                            "description": "黄金",
+                            "proName": "OANDA:XAUUSD"
+                        },
+                        {
+                            "description": "比特币",
+                            "proName": "BITMEX:XBT"
+                        },
+                        {
+                            "description": "以太币",
+                            "proName": "COINBASE:ETHUSD"
+                        },
+                        {
+                            "description": "瑞波币",
+                            "proName": "BITSTAMP:XRPUSD"
+                        }
+                    ],
+                        "locale": "zh_CN",
+                        "linkPageTemplate": "https://cryptocurrencycharts.herokuapp.com/chart"
+                    }
+                </script>
+            </div>
+        </li>
+    </ul>
 </div>
 <!-- TradingView Widget END -->
     <div id="app"></div>

@@ -1,3 +1,7 @@
+* {
+    margin: 0;
+    padding: 0
+}
 #coin_list, #content, #exchange_list {
     margin: 0 100px;
 }
@@ -25,4 +29,27 @@ td img{
 }
 tbody tr {
     transition: all 0.5s;
+}
+@keyframes roll {
+    from {
+        transform: translateX(0)
+    }
+    to {
+        transform: translateX(-50%)
+    }
+}
+#tickBar {
+    overflow: hidden
+}
+#tickBar ul {
+    width: 200%;
+    list-style: none;
+    animation: roll 60s linear infinite
+}
+#tickBar li {
+    width: 50%;
+    float: left
+}
+#tickBar:hover ul{
+    animation-play-state: paused
 }
