@@ -99,7 +99,4 @@
     .bar {
         width: 50%;
     }
-    tbody tr:hover {
-        transform: skew(-10deg) scale(1.04, 1.05)
-    }
 </style>

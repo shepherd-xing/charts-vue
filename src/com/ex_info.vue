@@ -125,7 +125,7 @@
 
 <style scoped>
     #exchange_info {
-        margin: 0 30px;
+        margin: 0 60px;
     }
     #links {
         margin-top: 5px;
@@ -143,8 +143,5 @@
     }
     .bar {
         width: 50%;
-    }
-    tbody tr:hover {
-        transform: skew(-12deg) scale(1.03, 1.05)
     }
 </style>

@@ -4,10 +4,12 @@
             <ul class="nav nav-pills">
                 <li><router-link to="/coin">虚拟货币</router-link></li>
                 <li><router-link to="/exchange">交易所</router-link></li>
+                <li><router-link to="/compare">比一比</router-link></li>
                 <li><a href="/chart">图表</a></li>
             </ul>
         </div>
-        <transition mode="out-in" enter-active-class="rollIn" :duration="5000">
+        <transition mode="out-in" enter-active-class="zoomIn" leave-active-class="zoomOutLeft"
+                    :duration="{enter: 800, out:200}">
             <router-view @getPercents="getPercents" :windowWidth="windowWidth" class="animated"></router-view>
         </transition>
     </div>
@@ -55,11 +57,4 @@
     .router-link-active{
         background: plum;
     }
-    /*.v-enter, v-leave-to{*/
-        /*transform: translateX(1000px)*/
-    /*}*/
-    /*.v-enter-active, v-leave-active{*/
-        /*transition: all 1s ease-in*/
-    /*}*/
-
 </style>

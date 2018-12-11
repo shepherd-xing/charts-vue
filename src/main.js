@@ -18,5 +18,5 @@ const vm = new Vue({
     render: function(c){
         return c(app)
     },
-    router: routerObj
+    router: routerObj,
 })

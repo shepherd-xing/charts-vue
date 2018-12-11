@@ -105,13 +105,13 @@
         },
         methods: {
             getData: function(){
-                this.symbol = this.$route.params.symbol
-                var url = '/api/coins/' + this.symbol
+                this.symbol = this.$route.params.symbol;
+                var url = '/api/coins/' + this.symbol;
                 this.$axios.get(url).then(res => {
-                    this.detail = res.data['detail']
-                    var linksObj = this.detail['links']
-                    this.getWebsites(linksObj)
-                    this.getSupply()
+                    this.detail = res.data.detail;
+                    var linksObj = this.detail.links;
+                    this.getWebsites(linksObj);
+                    this.getSupply();
                     this.getTradeInfo()
                 })
             },
@@ -185,7 +185,7 @@
 
 <style scoped>
     #coin_info {
-        margin: 15px 30px;
+        margin: 0 60px;
         padding-left: 0
     }
     .col-md-5 {
@@ -199,8 +199,4 @@
     .bar {
         width: 50%;
     }
-    tbody tr:hover {
-        transform: skew(-12deg) scale(1.03, 1.05)
-    }
-
 </style>

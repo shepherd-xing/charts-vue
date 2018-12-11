@@ -72,6 +72,7 @@
                     this.data = res.data['coins'];
                     this.display_data = this.data.slice(0, 30);     //初始显示30条数据
                     this.remain_data = this.data.slice(30);
+                    this.saveCoinList()
                 }, function(e){
                     console.log(e)
                 });
@@ -166,6 +167,14 @@
             goToTop: function(){
                 scrollTo(0, 0);
             },
+            saveCoinList: function(){
+                var listObj = {};
+                this.data.forEach(function(val){
+                    listObj[val.symbol] = val.name
+                });
+                listObj = JSON.stringify(listObj);
+                localStorage.setItem('$coinList', listObj)
+            }
         },
         computed: {
             titleObj: function(){
@@ -217,8 +226,4 @@
     .red_heart {
         background-position: -31px;
     }
-    tbody tr:hover {
-        transform: skew(-10deg) scale(1.04, 1.05)
-    }
-
 </style>

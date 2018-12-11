@@ -30,6 +30,9 @@ td img{
 tbody tr {
     transition: all 0.5s;
 }
+tbody tr:hover {
+    transform: skew(-10deg) scale(1.02, 1.05)
+}
 @keyframes roll {
     from {
         transform: translateX(0)
@@ -41,15 +44,14 @@ tbody tr {
 #tickBar {
     overflow: hidden
 }
-#tickBar ul {
+#outerContainer {
     width: 200%;
-    list-style: none;
     animation: roll 60s linear infinite
 }
-#tickBar li {
+.innerContainer {
     width: 50%;
     float: left
 }
-#tickBar:hover ul{
+#outerContainer:hover {
     animation-play-state: paused
 }
