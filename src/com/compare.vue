@@ -38,40 +38,43 @@
                 </tr>
                 </tbody>
             </table>
+            <dragabble :options="{animation: 1500}" style="display:flex; justify-content:center">
+                <table v-for="(info, index) in coinInfo" :key="index" class="table table-bordered table-condensed" style="border-right:3px double lightseagreen">
+                    <thead>
+                    <tr>
+                        <th colspan="2" style="text-align:center; cursor: pointer" title="点击进行拖拽">{{ allCoins[info['symbol']] }} ({{ info['symbol'] }})</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr style="height: 60px">
+                        <td colspan="2">{{ info['supplies']['Circulating Supply'] || '?' }} / {{ info['supplies']['Max Supply'] || '?' }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><a :href="info['links']['Website']" target="_blank">{{ info['links']['Website'] }}</a></td>
+                    </tr>
+                    <tr style="height: 60px">
+                        <td style="width:50%">交易所</td>
+                        <td>交易量</td>
+                    </tr>
+                    <tr v-for="(infos, index) in info['trade_info']" :key="index" style="margin-top: 15px; height:55px">
+                        <td>
+                            <img :src="infos['ex_info']['icon_src']">
+                            {{ infos['ex_info']['ex_name']}}
+                        </td>
+                        <td>
+                            $ {{ infos['ex_info']['volume'].toLocaleString() }}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </dragabble>
 
-            <table v-for="(info, index) in coinInfo" :key="index" class="table table-bordered table-condensed">
-                <thead>
-                <tr>
-                    <th colspan="2" style="text-align:center">{{ allCoins[info['symbol']] }} ({{ info['symbol'] }})</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr style="height: 60px">
-                    <td colspan="2">{{ info['supplies']['Circulating Supply'] || '?' }} / {{ info['supplies']['Max Supply'] || '?' }}</td>
-                </tr>
-                <tr>
-                    <td colspan="2"><a :href="info['links']['Website']" target="_blank">{{ info['links']['Website'] }}</a></td>
-                </tr>
-                <tr style="height: 60px">
-                    <td style="width:50%">交易所</td>
-                    <td>交易量</td>
-                </tr>
-                <tr v-for="(infos, index) in info['trade_info']" :key="index" style="margin-top: 15px; height:55px">
-                    <td>
-                        <img :src="infos['ex_info']['icon_src']">
-                        {{ infos['ex_info']['ex_name']}}
-                    </td>
-                    <td>
-                        $ {{ infos['ex_info']['volume'].toLocaleString() }}
-                    </td>
-                </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 </template>
 
 <script>
+    import dragabble from 'vuedraggable';
     var compare = {
         template: '#compareTemp',
         data(){
@@ -88,6 +91,9 @@
         created(){
             this.getAllCoins();
             this.getInfo();
+        },
+        components: {
+            dragabble
         },
         methods: {
             getAllCoins: function(){
