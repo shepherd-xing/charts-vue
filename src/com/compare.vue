@@ -20,43 +20,43 @@
         </div>
 
         <div class="tableContainer">
-            <table class="table table-striped table-condensed table1">
+            <table class="table table-striped table-bordered table-condensed table1">
                 <thead>
                 <tr>
                     <th>货币</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr style="height: 60px">
+                <tr>
                     <td>流通量/总量</td>
                 </tr>
                 <tr>
                     <td>主页</td>
                 </tr>
-                <tr style="height: 800px">
-                    <td style="padding: 300px 50px">可交易的交易所</td>
+                <tr>
+                    <td>可交易的交易所</td>
                 </tr>
                 </tbody>
             </table>
-            <dragabble :options="{animation: 1500}" style="display:flex; justify-content:center">
-                <table v-for="(info, index) in coinInfo" :key="index" class="table table-bordered table-condensed" style="border-right:3px double lightseagreen">
+            <dragabble :options="{animation: 1500}">
+                <table v-for="(info, index) in coinInfo" :key="index" class="table table-bordered table-condensed infoTable">
                     <thead>
                     <tr>
-                        <th colspan="2" style="text-align:center; cursor: pointer" title="点击进行拖拽">{{ allCoins[info['symbol']] }} ({{ info['symbol'] }})</th>
+                        <th colspan="2" title="点击进行拖拽">{{ allCoins[info['symbol']] }} ({{ info['symbol'] }})</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr style="height: 60px">
+                    <tr>
                         <td colspan="2">{{ info['supplies']['Circulating Supply'] || '?' }} / {{ info['supplies']['Max Supply'] || '?' }}</td>
                     </tr>
                     <tr>
                         <td colspan="2"><a :href="info['links']['Website']" target="_blank">{{ info['links']['Website'] }}</a></td>
                     </tr>
-                    <tr style="height: 60px">
-                        <td style="width:50%">交易所</td>
+                    <tr>
+                        <td>交易所</td>
                         <td>交易量</td>
                     </tr>
-                    <tr v-for="(infos, index) in info['trade_info']" :key="index" style="margin-top: 15px; height:55px">
+                    <tr v-for="(infos, index) in info['trade_info']" :key="index">
                         <td>
                             <img :src="infos['ex_info']['icon_src']">
                             {{ infos['ex_info']['ex_name']}}
@@ -195,14 +195,14 @@
     }
     .pullDownContainer {
         display: inline-block;
+        position: relative
     }
     .choices_input {
         background: #f9f9f9
     }
     .pullDown {
-        display: inline-block;
         height: 300px;
-        width: 175px;
+        width: 100%;
         background: honeydew;
         position: absolute;
         overflow: auto
@@ -213,22 +213,39 @@
     }
     .tableContainer {
         display: flex;
-        justify-content: center
     }
     .table1 {
-        width: 200px;
+        width: 90px;
     }
-    table li {
-        list-style: none;
+    .table1 tbody tr:first-child{
+        height: 50px;
     }
-    table li:hover {
-        background: plum;
+    .table1 tbody tr:nth-child(3){
+        height: 800px;
     }
-    tr {
-        min-height: 200px;
+    .table1 tbody tr:nth-child(3) td {
+        padding: 300px 40px;
+    }
+    .infoTable {
+        width: 240px;
+        float: left;
+        border-top: 1px solid lightseagreen;
+        border-right:3px double lightseagreen
+    }
+    .infoTable thead th:first-child {
+        text-align: center;
+        cursor: pointer
+    }
+    .infoTable tbody tr:first-child, .infoTable tr:nth-child(n+4){
+        height: 50px;
+    }
+    .infoTable tbody tr:nth-child(3) td {
+        width: 50%
     }
     tbody tr:hover {
         transform: skew(0) scale(1, 1);
+    }
+    .infoTable tbody tr:hover {
         background: lightblue;
     }
 </style>
