@@ -30,7 +30,7 @@
                 </td>
                 <td><router-link :to="'/coin/' + coin['symbol']">{{ coin['symbol'] }}</router-link></td>
                 <td>$ {{ parseInt(coin['cap']).toLocaleString() }}</td>
-                <td>$ {{ coin['price'] | toFix }}</td>
+                <td>$ {{ coin['price'] | formatDec }}</td>
                 <td :class="['change', {'down': parseFloat(coin['change']) < 0 }]">
                     {{ coin['change'] }}%
                 </td>
@@ -46,11 +46,12 @@
 </template>
 
 <script>
+    import store from '../store.js';
     var coin = {
         template: '#coin',
+        name: 'coin_list',
         data(){
             return {
-                data: [],       //所有数据
                 remain_data: [],     //滚动加载的列表，整个列表减去初始列表
                 display_data: [],     //要显示的列表
                 input: '',              //输入的代号或者名字
@@ -61,21 +62,24 @@
         props: ['windowWidth'],
         created(){
             this.getData();
-            this.getPortfolio()
+            this.getPortfolio();
+            this.setData()
         },
         mounted(){
             addEventListener('scroll', this.scroll);
         },
         methods: {
             getData: function(){
-                this.$axios.get('/api/coins').then(res => {
-                    this.data = res.data['coins'];
-                    this.display_data = this.data.slice(0, 30);     //初始显示30条数据
-                    this.remain_data = this.data.slice(30);
-                    this.saveCoinList()
-                }, function(e){
-                    console.log(e)
-                });
+                store.commit('getData')
+            },
+            setData: function(){
+                var id = setInterval(() =>{
+                    if(this.allCoins.length>0){
+                        this.display_data = this.allCoins.slice(0, 30);
+                        this.remain_data = this.allCoins.slice(30);
+                        clearInterval(id)
+                    }
+                }, 100)
             },
             scroll: function(){
                 var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
@@ -97,7 +101,7 @@
             search: function(){
                 var btn = this.$refs.showbtn
                 if (btn.value === '显示全部'){
-                    var portfolio_data = this.data.filter(item =>{
+                    var portfolio_data = this.allCoins.filter(item =>{
                         return this.portfolio.indexOf(item['symbol']) > -1
                     })
                     if (this.input === ''){
@@ -112,10 +116,10 @@
                 }
                 else {
                     if (this.input === ''){
-                        this.display_data = this.data.slice(0, 30)
+                        this.display_data = this.allCoins.slice(0, 30)
                     }
                     else{
-                        this.display_data = this.data.filter(item => {
+                        this.display_data = this.allCoins.filter(item => {
                             return item['symbol'].indexOf(this.input.toUpperCase()) > -1 ||
                                 item['name'].toUpperCase().indexOf(this.input.toUpperCase()) > -1
                         })
@@ -148,14 +152,14 @@
                 var btn = this.$refs.showbtn
                 if (btn.value === '我的收藏'){      //点击显示收藏
                     btn.value = '显示全部'
-                    this.display_data = this.data.filter(item => {
+                    this.display_data = this.allCoins.filter(item => {
                         return this.portfolio.indexOf(item['symbol']) > -1
                     })
                 }
                 else {      //点击显示全部
                     btn.value = '我的收藏'
-                    this.display_data = this.data.slice(0, 30)
-                    this.remain_data = this.data.slice(30)
+                    this.display_data = this.allCoins.slice(0, 30)
+                    this.remain_data = this.allCoins.slice(30)
                 }
             },
             getPortfolio: function(){           //渲染页面时读取localStorage的portfolio
@@ -167,19 +171,11 @@
             goToTop: function(){
                 scrollTo(0, 0);
             },
-            saveCoinList: function(){
-                var listObj = {};
-                this.data.forEach(function(val){
-                    listObj[val.symbol] = val.name
-                });
-                listObj = JSON.stringify(listObj);
-                localStorage.setItem('$coinList', listObj)
-            }
         },
         computed: {
             titleObj: function(){
                 var obj = {};
-                for (var item of this.data){
+                for (var item of this.allCoins){
                     if (this.portfolio.indexOf(item['symbol']) > -1){
                         obj[item['symbol']] = '取消收藏'
                     }
@@ -191,10 +187,13 @@
             },
             width: function(){
                 return this.windowWidth - 70 + 'px'
+            },
+            allCoins: function(){       //获取所有coin信息
+                return store.state.allCoins
             }
         },
         filters: {
-            toFix: function(num){
+            formatDec: function(num){
                 switch (true){
                     case num < 0.1:
                         return num.toFixed(5);

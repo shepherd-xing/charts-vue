@@ -2,17 +2,18 @@
     <div id="compare">
         <div class="choices_container">
             <div class="choices_list">
-                <div v-for="(symbol, index) in showList" :key="symbol" class="choices_item">
-                    {{ allCoins[symbol] }} ({{ symbol }})
-                    <button class="choices_button" @click="remove(index); removeTable(symbol)">X</button>
+                <div v-for="(item, index) in showList" :key="index" class="choices_item">
+                    {{ item.name }} ({{ item.symbol }})
+                    <button class="choices_button" @click="remove(index); removeTable(item.symbol)">X</button>
                 </div>
             </div>
-            <div class="pullDownContainer" @mouseleave="hidePullDown">
-                <input type="text" class="choices_input" @click="showPullDown" v-model="input">
+            <div class="pullDownContainer" @mouseleave="flag=false">
+                <input type="text" class="choices_input" @click="flag=true" v-model="input">
                 <div class="pullDown" v-if="flag">
                     <ul>
-                        <li v-for="symbol in pullDownList" :key="symbol"
-                            @click="getCoinInfo(symbol); addToShowList(symbol)">{{ allCoins[symbol] }} ({{ symbol }})</li>
+                        <li v-for="(item, index) in pullDownList" :key="index"
+                            @click="getCoinInfo(item.symbol); addToShowList(item.symbol, item.name)">
+                            {{ item.name }} ({{ item.symbol }})</li>
                     </ul>
                 </div>
             </div>
@@ -20,13 +21,22 @@
         </div>
 
         <div class="tableContainer">
-            <table class="table table-striped table-bordered table-condensed table1">
+            <table class="table table-striped table-bordered table-condensed tableLeft">
                 <thead>
                 <tr>
                     <th>货币</th>
                 </tr>
                 </thead>
                 <tbody>
+                <tr>
+                    <td>排名</td>
+                </tr>
+                <tr>
+                    <td>价格</td>
+                </tr>
+                <tr>
+                    <td>市值</td>
+                </tr>
                 <tr>
                     <td>流通量/总量</td>
                 </tr>
@@ -38,31 +48,44 @@
                 </tr>
                 </tbody>
             </table>
-            <dragabble :options="{animation: 1500}">
-                <table v-for="(info, index) in coinInfo" :key="index" class="table table-bordered table-condensed infoTable">
+            <dragabble :options="{animation: 1500}" class="drag">
+                <table v-for="(item, index) in coinInfo" :key="index"
+                       class="table table-bordered table-condensed infoTable">
                     <thead>
                     <tr>
-                        <th colspan="2" title="点击进行拖拽">{{ allCoins[info['symbol']] }} ({{ info['symbol'] }})</th>
+                        <th colspan="2" class="withTitle">
+                            <img :src="detail[item['symbol']]['icon_src']">
+                            {{ detail[item['symbol']]['name'] }} ({{ item['symbol'] }})
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <td colspan="2">{{ info['supplies']['Circulating Supply'] || '?' }} / {{ info['supplies']['Max Supply'] || '?' }}</td>
+                        <td colspan="2">{{ detail[item['symbol']]['rank'] }}</td>
                     </tr>
                     <tr>
-                        <td colspan="2"><a :href="info['links']['Website']" target="_blank">{{ info['links']['Website'] }}</a></td>
+                        <td colspan="2">$ {{ detail[item['symbol']]['price'] | formatDec }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">$ {{ detail[item['symbol']]['cap'] | toInt }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">{{ item['supplies']['Circulating Supply'] || '未知' }} / {{ item['supplies']['Max Supply'] || '未知' }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><a :href="item['links']['Website']" target="_blank">{{ item['links']['Website'] }}</a></td>
                     </tr>
                     <tr>
                         <td>交易所</td>
                         <td>交易量</td>
                     </tr>
-                    <tr v-for="(infos, index) in info['trade_info']" :key="index">
+                    <tr v-for="(info, index) in item['trade_info']" :key="index">
                         <td>
-                            <img :src="infos['ex_info']['icon_src']">
-                            {{ infos['ex_info']['ex_name']}}
+                            <img :src="info['ex_info']['icon_src']">
+                            {{ info['ex_info']['ex_name']}}
                         </td>
                         <td>
-                            $ {{ infos['ex_info']['volume'].toLocaleString() }}
+                            $ {{ info['ex_info']['volume'].toLocaleString() }}
                         </td>
                     </tr>
                     </tbody>
@@ -75,60 +98,69 @@
 
 <script>
     import dragabble from 'vuedraggable';
+    import store from '../store.js';
+
     var compare = {
         template: '#compareTemp',
         data(){
             return {
-                allCoins: {},
-                symbols: [],
                 showList: [],
                 coinInfo: [],
                 flag: false,
-                obj: {},
+                detail: {},
                 input: ''
             }
         },
         created(){
-            this.getAllCoins();
-            this.getInfo();
+            this.setInfo();
         },
         components: {
             dragabble
         },
         methods: {
-            getAllCoins: function(){
-                var obj = localStorage.getItem('$coinList');
-                this.allCoins = JSON.parse(obj);
-                for(var key in this.allCoins){
-                    this.symbols.push(key)
-                };
-                this.showList = this.symbols.slice(0, 4);
+            setInfo: function(){
+                var id = setInterval(() => {
+                    if(this.allCoins.length > 0){
+                        this.showList = this.allCoins.slice(0, 4).map(item => {
+                            var obj = {};
+                            obj.symbol = item.symbol;
+                            obj.name = item.name;
+                            return obj
+                        });
+                        this.allCoins.forEach(item => {
+                            var obj = {};
+                            obj.name = item.name;
+                            obj.price = item.price;
+                            obj.cap = item.cap;
+                            obj.rank = item.rank;
+                            obj.icon_src = item.icon_src;
+                            this.detail[item.symbol] = obj
+                        });
+                        this.getInfo();
+                        clearInterval(id)
+                    }
+                }, 100)
             },
-            getCoinInfo: function(symbol){
+            getCoinInfo: function(symbol){      //获取coin详细信息
                 var url = '/api/coins/' + symbol;
                 this.$axios.get(url).then(res => {
                     var data = res.data.detail;
                     data['symbol'] = symbol;
                     data['trade_info'] = this.unique(data['trade_info']);
                     this.coinInfo.push(data)
-                });
+                })
             },
             getInfo: function(){
-                for (var symbol of this.showList){
-                    this.getCoinInfo(symbol)
-                }
+                this.showList.forEach(item => this.getCoinInfo(item.symbol))
             },
-            addToShowList: function(symbol){
-                this.showList.push(symbol)
+            addToShowList: function(symbol, name){
+                var obj = {};
+                obj.symbol = symbol;
+                obj.name = name;
+                this.showList.push(obj)
             },
             remove: function(index){
                 this.showList.splice(index, 1)
-            },
-            showPullDown: function(){
-                this.flag = true
-            },
-            hidePullDown: function(){
-                this.flag = false
             },
             removeTable: function(symbol){
                 this.coinInfo = this.coinInfo.filter(item => item['symbol'] !== symbol)
@@ -157,10 +189,37 @@
         },
         computed: {
             pullDownList: function(){
-                return this.symbols.filter(val => this.showList.indexOf(val) === -1)
+                return this.allCoins.filter(val => {
+                    var list = this.showList.map(item => item.symbol);
+                    return list.indexOf(val.symbol) === -1 &&
+                        (val.symbol.indexOf(this.input.toUpperCase()) > -1 ||
+                            val.name.toUpperCase().indexOf(this.input.toUpperCase()) > -1)
+                })
             },
+            allCoins: function(){
+                var obj = localStorage.getItem('$coinList');
+                var localeData = JSON.parse(obj);
+                var storeData = store.state.allCoins;
+                return storeData.length > 0 ? storeData: localeData
+            }
         },
-    }
+        filters: {
+            toInt: function(num){
+                return parseInt(num).toLocaleString()
+            },
+            formatDec: function(num){
+                if(num>10){
+                    return num.toFixed(2)
+                }
+                else if(num>0.1){
+                    return num.toFixed(3)
+                }
+                else{
+                    return num.toFixed(4)
+                }
+            }
+        }
+    };
     export default compare
 </script>
 
@@ -201,7 +260,7 @@
         background: #f9f9f9
     }
     .pullDown {
-        height: 300px;
+        max-height: 300px;
         width: 100%;
         background: honeydew;
         position: absolute;
@@ -214,38 +273,51 @@
     .tableContainer {
         display: flex;
     }
-    .table1 {
+    tbody tr:hover {
+        transform: none
+    }
+    .tableLeft {
         width: 90px;
     }
-    .table1 tbody tr:first-child{
+    .tableLeft tbody tr:nth-child(4){
         height: 50px;
     }
-    .table1 tbody tr:nth-child(3){
-        height: 800px;
+    .tableLeft tbody tr:nth-child(6) td {
+        padding: 200px 40px;
     }
-    .table1 tbody tr:nth-child(3) td {
-        padding: 300px 40px;
+    .drag {
+        display: flex;
     }
     .infoTable {
-        width: 240px;
-        float: left;
+        display: block;
         border-top: 1px solid lightseagreen;
-        border-right:3px double lightseagreen
+        border-right:3px double lightseagreen;
     }
     .infoTable thead th:first-child {
-        text-align: center;
         cursor: pointer
     }
-    .infoTable tbody tr:first-child, .infoTable tr:nth-child(n+4){
+    .infoTable th, .infoTable td {
+        text-align: center
+    }
+    .infoTable tr:nth-child(n+7) td {
+        text-align: left
+    }
+    .infoTable tbody tr:nth-child(4), .infoTable tr:nth-child(n+7){
         height: 50px;
     }
-    .infoTable tbody tr:nth-child(3) td {
+    .infoTable tbody tr:nth-child(6) td {
         width: 50%
-    }
-    tbody tr:hover {
-        transform: skew(0) scale(1, 1);
     }
     .infoTable tbody tr:hover {
         background: lightblue;
+    }
+    .withTitle:hover:after {
+        content: '点击进行拖拽';
+        color: mediumorchid;
+        position: absolute;
+        margin-left: 10px;
+        margin-top: -5px;
+        background: honeydew;
+        font: italic 18px 华文新魏;
     }
 </style>

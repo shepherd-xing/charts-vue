@@ -10,7 +10,9 @@
         </div>
         <transition mode="out-in" enter-active-class="zoomIn" leave-active-class="zoomOutLeft"
                     :duration="{enter: 800, out:200}">
-            <router-view @getPercents="getPercents" :windowWidth="windowWidth" class="animated"></router-view>
+            <keep-alive>
+                <router-view @getPercents="getPercents" :windowWidth="windowWidth" class="animated"></router-view>
+            </keep-alive>
         </transition>
     </div>
 </template>
