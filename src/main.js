@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import './css/main.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import Vue from 'vue'
@@ -10,6 +11,7 @@ Vue.prototype.$axios = axios
 import Chart from 'chart.js'
 window.Promise = Promise
 import 'animate.css'
+import store from './store.js'
 
 const vm = new Vue({
     el: '#app',
@@ -19,4 +21,5 @@ const vm = new Vue({
         return c(app)
     },
     router: routerObj,
+    store
 })

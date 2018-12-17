@@ -14,7 +14,6 @@ const mutations = {
             state.allCoins = res.data.coins;
             var list = JSON.stringify(state.allCoins);
             localStorage.setItem('$coinList', list);
-            list = null
         }, function(e){
             console.log(e)
         });

@@ -46,7 +46,7 @@ tbody tr:hover {
 }
 #outerContainer {
     width: 200%;
-    animation: roll 60s linear infinite
+    animation: roll 80s linear infinite
 }
 .innerContainer {
     width: 50%;

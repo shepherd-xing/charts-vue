@@ -30,6 +30,7 @@
   "dependencies": {
     "animate.css": "^3.7.0",
     "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
     "bootstrap": "^3.3.7",
     "chart.js": "^2.7.2",
     "vue": "^2.5.17",
